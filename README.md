@@ -44,3 +44,31 @@ Exponha via ngrok (ou outro tnel) e configure o webhook na Meta.
 - Nunca commite `.env`
 - Regere tokens periodicamente
 
+## Migração para Novo Servidor
+
+📖 **Guia Completo:** Consulte [MIGRACAO-SERVIDOR.md](./MIGRACAO-SERVIDOR.md) para instruções detalhadas passo a passo.
+
+### Setup Rápido
+
+1. Clone o repositório no servidor
+2. Execute o script de setup:
+   ```bash
+   chmod +x setup-inicial.sh
+   ./setup-inicial.sh
+   ```
+3. Configure o `.env` quando solicitado
+4. A aplicação será iniciada automaticamente
+
+### Deploy Automático
+
+Para atualizações futuras:
+```bash
+./deploy-auto.sh
+```
+
+### Arquivos de Configuração
+
+- `ecosystem.config.js`: configuração do PM2
+- `setup-inicial.sh`: script de setup inicial
+- `deploy-auto.sh`: script de deploy automático
+

@@ -1,0 +1,780 @@
+
+
+> wapp-poc@1.0.0 start
+> node server.js
+
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  override existing env vars with { override: true }
+🚀 Servidor rodando na porta 3000
+[Webhook] ✅ Verificado com sucesso
+[Webhook] 🔔 Evento recebido: {
+  "object": "whatsapp_business_account",
+  "entry": [
+    {
+      "id": "1535276744056597",
+      "changes": [
+        {
+          "value": {
+            "messaging_product": "whatsapp",
+            "metadata": {
+              "display_phone_number": "551153050027",
+              "phone_number_id": "911344615386648"
+            },
+            "contacts": [
+              {
+                "profile": {
+                  "name": "Marcelo Ferracini"
+                },
+                "wa_id": "5511958711770"
+              }
+            ],
+            "messages": [
+              {
+                "from": "5511958711770",
+                "id": "wamid.HBgNNTUxMTk1ODcxMTc3MBUCABIYFDNBNzc1RjI2MkU3NzQxODJBMzdGAA==",
+                "timestamp": "1763807627",
+                "text": {
+                  "body": "Olá"
+                },
+                "type": "text"
+              }
+            ]
+          },
+          "field": "messages"
+        }
+      ]
+    }
+  ]
+}
+[Debug] Mensagens extraídas: [
+  {
+    "from": "5511958711770",
+    "id": "wamid.HBgNNTUxMTk1ODcxMTc3MBUCABIYFDNBNzc1RjI2MkU3NzQxODJBMzdGAA==",
+    "timestamp": "1763807627",
+    "text": {
+      "body": "Olá"
+    },
+    "type": "text"
+  }
+]
+[Debug] Contatos extraídos: [
+  {
+    "profile": {
+      "name": "Marcelo Ferracini"
+    },
+    "wa_id": "5511958711770"
+  }
+]
+Mensagem recebida de 5511958711770: Olá
+[OpenAI] Gerando resposta...
+[OpenAI] Resposta gerada: Olá! Como posso ajudá-lo hoje? Se tiver alguma dúvida ou precisar de informações, estou aqui para ajudar!
+[POST Meta] URL: https://graph.facebook.com/v22.0/775904258949205/messages
+[POST Meta] Body: {
+  "messaging_product": "whatsapp",
+  "to": "5511958711770",
+  "type": "text",
+  "text": {
+    "body": "Olá! Como posso ajudá-lo hoje? Se tiver alguma dúvida ou precisar de informações, estou aqui para ajudar!"
+  }
+}
+✅ Resposta enviada com sucesso para 5511958711770
+[POST Meta] Response: {
+  "messaging_product": "whatsapp",
+  "contacts": [
+    {
+      "input": "5511958711770",
+      "wa_id": "5511958711770"
+    }
+  ],
+  "messages": [
+    {
+      "id": "wamid.HBgNNTUxMTk1ODcxMTc3MBUCABEYEjI0NTQ1ODhDOTgxNzg4RDI4MgA="
+    }
+  ]
+}
+[Webhook] 🔔 Evento recebido: {
+  "object": "whatsapp_business_account",
+  "entry": [
+    {
+      "id": "808783645458695",
+      "changes": [
+        {
+          "value": {
+            "messaging_product": "whatsapp",
+            "metadata": {
+              "display_phone_number": "15556657611",
+              "phone_number_id": "775904258949205"
+            },
+            "statuses": [
+              {
+                "id": "wamid.HBgNNTUxMTk1ODcxMTc3MBUCABEYEjI0NTQ1ODhDOTgxNzg4RDI4MgA=",
+                "status": "sent",
+                "timestamp": "1763807632",
+                "recipient_id": "5511958711770",
+                "pricing": {
+                  "billable": false,
+                  "pricing_model": "PMP",
+                  "category": "service",
+                  "type": "free_customer_service"
+                }
+              }
+            ]
+          },
+          "field": "messages"
+        }
+      ]
+    }
+  ]
+}
+[Debug] Mensagens extraídas: undefined
+[Debug] Contatos extraídos: undefined
+[Webhook] 🔔 Evento recebido: {
+  "object": "whatsapp_business_account",
+  "entry": [
+    {
+      "id": "808783645458695",
+      "changes": [
+        {
+          "value": {
+            "messaging_product": "whatsapp",
+            "metadata": {
+              "display_phone_number": "15556657611",
+              "phone_number_id": "775904258949205"
+            },
+            "statuses": [
+              {
+                "id": "wamid.HBgNNTUxMTk1ODcxMTc3MBUCABEYEjI0NTQ1ODhDOTgxNzg4RDI4MgA=",
+                "status": "delivered",
+                "timestamp": "1763807633",
+                "recipient_id": "5511958711770",
+                "pricing": {
+                  "billable": false,
+                  "pricing_model": "PMP",
+                  "category": "service",
+                  "type": "free_customer_service"
+                }
+              }
+            ]
+          },
+          "field": "messages"
+        }
+      ]
+    }
+  ]
+}
+[Debug] Mensagens extraídas: undefined
+[Debug] Contatos extraídos: undefined
+[Webhook] 🔔 Evento recebido: {
+  "object": "whatsapp_business_account",
+  "entry": [
+    {
+      "id": "808783645458695",
+      "changes": [
+        {
+          "value": {
+            "messaging_product": "whatsapp",
+            "metadata": {
+              "display_phone_number": "15556657611",
+              "phone_number_id": "775904258949205"
+            },
+            "statuses": [
+              {
+                "id": "wamid.HBgNNTUxMTk1ODcxMTc3MBUCABEYEjI0NTQ1ODhDOTgxNzg4RDI4MgA=",
+                "status": "delivered",
+                "timestamp": "1763807633",
+                "recipient_id": "5511958711770",
+                "pricing": {
+                  "billable": false,
+                  "pricing_model": "PMP",
+                  "category": "service",
+                  "type": "free_customer_service"
+                }
+              }
+            ]
+          },
+          "field": "messages"
+        }
+      ]
+    }
+  ]
+}
+[Debug] Mensagens extraídas: undefined
+[Debug] Contatos extraídos: undefined
+[Webhook] 🔔 Evento recebido: {
+  "object": "whatsapp_business_account",
+  "entry": [
+    {
+      "id": "1535276744056597",
+      "changes": [
+        {
+          "value": {
+            "messaging_product": "whatsapp",
+            "metadata": {
+              "display_phone_number": "551153050027",
+              "phone_number_id": "911344615386648"
+            },
+            "contacts": [
+              {
+                "profile": {
+                  "name": "Marcelo Ferracini"
+                },
+                "wa_id": "5511958711770"
+              }
+            ],
+            "messages": [
+              {
+                "context": {
+                  "from": "5511958711770",
+                  "id": "wacid.HBgNNTUxMTk1ODcxMTc3MBUCABIYIEE0QTdGRTY4QkQwNkY1REMxNjg2RUZGREI2OTRBMUEwHBgMNTUxMTUzMDUwMDI3FQIAFSAA"
+                },
+                "from": "5511958711770",
+                "id": "wamid.HBgNNTUxMTk1ODcxMTc3MBUCABIYFDNBNDkxQUUxQ0M2ODdCNTBBMDg3AA==",
+                "timestamp": "1763807691",
+                "type": "interactive",
+                "interactive": {
+                  "type": "call_permission_reply",
+                  "call_permission_reply": {
+                    "response": "accept",
+                    "expiration_timestamp": 1764412491,
+                    "response_source": "user_action"
+                  }
+                }
+              }
+            ]
+          },
+          "field": "messages"
+        }
+      ]
+    }
+  ]
+}
+[Debug] Mensagens extraídas: [
+  {
+    "context": {
+      "from": "5511958711770",
+      "id": "wacid.HBgNNTUxMTk1ODcxMTc3MBUCABIYIEE0QTdGRTY4QkQwNkY1REMxNjg2RUZGREI2OTRBMUEwHBgMNTUxMTUzMDUwMDI3FQIAFSAA"
+    },
+    "from": "5511958711770",
+    "id": "wamid.HBgNNTUxMTk1ODcxMTc3MBUCABIYFDNBNDkxQUUxQ0M2ODdCNTBBMDg3AA==",
+    "timestamp": "1763807691",
+    "type": "interactive",
+    "interactive": {
+      "type": "call_permission_reply",
+      "call_permission_reply": {
+        "response": "accept",
+        "expiration_timestamp": 1764412491,
+        "response_source": "user_action"
+      }
+    }
+  }
+]
+[Debug] Contatos extraídos: [
+  {
+    "profile": {
+      "name": "Marcelo Ferracini"
+    },
+    "wa_id": "5511958711770"
+  }
+]
+Mensagem recebida de 5511958711770: undefined
+[OpenAI] Gerando resposta...
+[OpenAI] Erro ao gerar resposta: 400 Invalid value for 'content': expected a string, got null.
+[POST Meta] URL: https://graph.facebook.com/v22.0/775904258949205/messages
+[POST Meta] Body: {
+  "messaging_product": "whatsapp",
+  "to": "5511958711770",
+  "type": "text",
+  "text": {
+    "body": "Desculpe Marcelo, estou com dificuldades técnicas no momento. Pode repetir?"
+  }
+}
+✅ Resposta enviada com sucesso para 5511958711770
+[POST Meta] Response: {
+  "messaging_product": "whatsapp",
+  "contacts": [
+    {
+      "input": "5511958711770",
+      "wa_id": "5511958711770"
+    }
+  ],
+  "messages": [
+    {
+      "id": "wamid.HBgNNTUxMTk1ODcxMTc3MBUCABEYEkI4ODEyRTA4NTlGODU1Q0ZCMQA="
+    }
+  ]
+}
+[Webhook] 🔔 Evento recebido: {
+  "object": "whatsapp_business_account",
+  "entry": [
+    {
+      "id": "808783645458695",
+      "changes": [
+        {
+          "value": {
+            "messaging_product": "whatsapp",
+            "metadata": {
+              "display_phone_number": "15556657611",
+              "phone_number_id": "775904258949205"
+            },
+            "statuses": [
+              {
+                "id": "wamid.HBgNNTUxMTk1ODcxMTc3MBUCABEYEkI4ODEyRTA4NTlGODU1Q0ZCMQA=",
+                "status": "sent",
+                "timestamp": "1763807695",
+                "recipient_id": "5511958711770",
+                "pricing": {
+                  "billable": false,
+                  "pricing_model": "PMP",
+                  "category": "service",
+                  "type": "free_customer_service"
+                }
+              }
+            ]
+          },
+          "field": "messages"
+        }
+      ]
+    }
+  ]
+}
+[Debug] Mensagens extraídas: undefined
+[Debug] Contatos extraídos: undefined
+[Webhook] 🔔 Evento recebido: {
+  "object": "whatsapp_business_account",
+  "entry": [
+    {
+      "id": "808783645458695",
+      "changes": [
+        {
+          "value": {
+            "messaging_product": "whatsapp",
+            "metadata": {
+              "display_phone_number": "15556657611",
+              "phone_number_id": "775904258949205"
+            },
+            "statuses": [
+              {
+                "id": "wamid.HBgNNTUxMTk1ODcxMTc3MBUCABEYEkI4ODEyRTA4NTlGODU1Q0ZCMQA=",
+                "status": "delivered",
+                "timestamp": "1763807696",
+                "recipient_id": "5511958711770",
+                "pricing": {
+                  "billable": false,
+                  "pricing_model": "PMP",
+                  "category": "service",
+                  "type": "free_customer_service"
+                }
+              }
+            ]
+          },
+          "field": "messages"
+        }
+      ]
+    }
+  ]
+}
+[Debug] Mensagens extraídas: undefined
+[Debug] Contatos extraídos: undefined
+[Webhook] 🔔 Evento recebido: {
+  "object": "whatsapp_business_account",
+  "entry": [
+    {
+      "id": "808783645458695",
+      "changes": [
+        {
+          "value": {
+            "messaging_product": "whatsapp",
+            "metadata": {
+              "display_phone_number": "15556657611",
+              "phone_number_id": "775904258949205"
+            },
+            "statuses": [
+              {
+                "id": "wamid.HBgNNTUxMTk1ODcxMTc3MBUCABEYEkI4ODEyRTA4NTlGODU1Q0ZCMQA=",
+                "status": "delivered",
+                "timestamp": "1763807696",
+                "recipient_id": "5511958711770",
+                "pricing": {
+                  "billable": false,
+                  "pricing_model": "PMP",
+                  "category": "service",
+                  "type": "free_customer_service"
+                }
+              }
+            ]
+          },
+          "field": "messages"
+        }
+      ]
+    }
+  ]
+}
+[Debug] Mensagens extraídas: undefined
+[Debug] Contatos extraídos: undefined
+[Webhook] 🔔 Evento recebido: {
+  "object": "whatsapp_business_account",
+  "entry": [
+    {
+      "id": "1535276744056597",
+      "changes": [
+        {
+          "value": {
+            "messaging_product": "whatsapp",
+            "metadata": {
+              "display_phone_number": "551153050027",
+              "phone_number_id": "911344615386648"
+            },
+            "contacts": [
+              {
+                "profile": {
+                  "name": "Marcelo Ferracini"
+                },
+                "wa_id": "5511958711770"
+              }
+            ],
+            "messages": [
+              {
+                "from": "5511958711770",
+                "id": "wamid.HBgNNTUxMTk1ODcxMTc3MBUCABIYFDNBNEMxRDRCNTQ4MENDN0YwNjU4AA==",
+                "timestamp": "1763807760",
+                "type": "interactive",
+                "interactive": {
+                  "type": "call_permission_reply",
+                  "call_permission_reply": {
+                    "response": "reject",
+                    "response_source": "user_action"
+                  }
+                }
+              }
+            ]
+          },
+          "field": "messages"
+        }
+      ]
+    }
+  ]
+}
+[Debug] Mensagens extraídas: [
+  {
+    "from": "5511958711770",
+    "id": "wamid.HBgNNTUxMTk1ODcxMTc3MBUCABIYFDNBNEMxRDRCNTQ4MENDN0YwNjU4AA==",
+    "timestamp": "1763807760",
+    "type": "interactive",
+    "interactive": {
+      "type": "call_permission_reply",
+      "call_permission_reply": {
+        "response": "reject",
+        "response_source": "user_action"
+      }
+    }
+  }
+]
+[Debug] Contatos extraídos: [
+  {
+    "profile": {
+      "name": "Marcelo Ferracini"
+    },
+    "wa_id": "5511958711770"
+  }
+]
+Mensagem recebida de 5511958711770: undefined
+[OpenAI] Gerando resposta...
+[OpenAI] Erro ao gerar resposta: 400 Invalid value for 'content': expected a string, got null.
+[POST Meta] URL: https://graph.facebook.com/v22.0/775904258949205/messages
+[POST Meta] Body: {
+  "messaging_product": "whatsapp",
+  "to": "5511958711770",
+  "type": "text",
+  "text": {
+    "body": "Desculpe Marcelo, estou com dificuldades técnicas no momento. Pode repetir?"
+  }
+}
+✅ Resposta enviada com sucesso para 5511958711770
+[POST Meta] Response: {
+  "messaging_product": "whatsapp",
+  "contacts": [
+    {
+      "input": "5511958711770",
+      "wa_id": "5511958711770"
+    }
+  ],
+  "messages": [
+    {
+      "id": "wamid.HBgNNTUxMTk1ODcxMTc3MBUCABEYEjIxOTA5NzJFRkI2Mzk3OUQyRAA="
+    }
+  ]
+}
+[Webhook] 🔔 Evento recebido: {
+  "object": "whatsapp_business_account",
+  "entry": [
+    {
+      "id": "808783645458695",
+      "changes": [
+        {
+          "value": {
+            "messaging_product": "whatsapp",
+            "metadata": {
+              "display_phone_number": "15556657611",
+              "phone_number_id": "775904258949205"
+            },
+            "statuses": [
+              {
+                "id": "wamid.HBgNNTUxMTk1ODcxMTc3MBUCABEYEjIxOTA5NzJFRkI2Mzk3OUQyRAA=",
+                "status": "sent",
+                "timestamp": "1763807766",
+                "recipient_id": "5511958711770",
+                "pricing": {
+                  "billable": false,
+                  "pricing_model": "PMP",
+                  "category": "service",
+                  "type": "free_customer_service"
+                }
+              }
+            ]
+          },
+          "field": "messages"
+        }
+      ]
+    }
+  ]
+}
+[Debug] Mensagens extraídas: undefined
+[Debug] Contatos extraídos: undefined
+[Webhook] 🔔 Evento recebido: {
+  "object": "whatsapp_business_account",
+  "entry": [
+    {
+      "id": "808783645458695",
+      "changes": [
+        {
+          "value": {
+            "messaging_product": "whatsapp",
+            "metadata": {
+              "display_phone_number": "15556657611",
+              "phone_number_id": "775904258949205"
+            },
+            "statuses": [
+              {
+                "id": "wamid.HBgNNTUxMTk1ODcxMTc3MBUCABEYEjIxOTA5NzJFRkI2Mzk3OUQyRAA=",
+                "status": "delivered",
+                "timestamp": "1763807766",
+                "recipient_id": "5511958711770",
+                "pricing": {
+                  "billable": false,
+                  "pricing_model": "PMP",
+                  "category": "service",
+                  "type": "free_customer_service"
+                }
+              }
+            ]
+          },
+          "field": "messages"
+        }
+      ]
+    }
+  ]
+}
+[Debug] Mensagens extraídas: undefined
+[Debug] Contatos extraídos: undefined
+[Webhook] 🔔 Evento recebido: {
+  "object": "whatsapp_business_account",
+  "entry": [
+    {
+      "id": "1535276744056597",
+      "changes": [
+        {
+          "value": {
+            "messaging_product": "whatsapp",
+            "metadata": {
+              "display_phone_number": "551153050027",
+              "phone_number_id": "911344615386648"
+            },
+            "contacts": [
+              {
+                "profile": {
+                  "name": "Marcelo Ferracini"
+                },
+                "wa_id": "5511958711770"
+              }
+            ],
+            "messages": [
+              {
+                "from": "5511958711770",
+                "id": "wamid.HBgNNTUxMTk1ODcxMTc3MBUCABIYFDNBODY2MTlGQzBCOTlFNjE3NzA2AA==",
+                "timestamp": "1763807852",
+                "type": "interactive",
+                "interactive": {
+                  "type": "call_permission_reply",
+                  "call_permission_reply": {
+                    "response": "accept",
+                    "expiration_timestamp": 1764412648,
+                    "response_source": "user_action"
+                  }
+                }
+              }
+            ]
+          },
+          "field": "messages"
+        }
+      ]
+    }
+  ]
+}
+[Debug] Mensagens extraídas: [
+  {
+    "from": "5511958711770",
+    "id": "wamid.HBgNNTUxMTk1ODcxMTc3MBUCABIYFDNBODY2MTlGQzBCOTlFNjE3NzA2AA==",
+    "timestamp": "1763807852",
+    "type": "interactive",
+    "interactive": {
+      "type": "call_permission_reply",
+      "call_permission_reply": {
+        "response": "accept",
+        "expiration_timestamp": 1764412648,
+        "response_source": "user_action"
+      }
+    }
+  }
+]
+[Debug] Contatos extraídos: [
+  {
+    "profile": {
+      "name": "Marcelo Ferracini"
+    },
+    "wa_id": "5511958711770"
+  }
+]
+Mensagem recebida de 5511958711770: undefined
+[OpenAI] Gerando resposta...
+[OpenAI] Erro ao gerar resposta: 400 Invalid value for 'content': expected a string, got null.
+[POST Meta] URL: https://graph.facebook.com/v22.0/775904258949205/messages
+[POST Meta] Body: {
+  "messaging_product": "whatsapp",
+  "to": "5511958711770",
+  "type": "text",
+  "text": {
+    "body": "Desculpe Marcelo, estou com dificuldades técnicas no momento. Pode repetir?"
+  }
+}
+✅ Resposta enviada com sucesso para 5511958711770
+[POST Meta] Response: {
+  "messaging_product": "whatsapp",
+  "contacts": [
+    {
+      "input": "5511958711770",
+      "wa_id": "5511958711770"
+    }
+  ],
+  "messages": [
+    {
+      "id": "wamid.HBgNNTUxMTk1ODcxMTc3MBUCABEYEjUzRDAzQzQyNDA2NDBFNTI0QgA="
+    }
+  ]
+}
+[Webhook] 🔔 Evento recebido: {
+  "object": "whatsapp_business_account",
+  "entry": [
+    {
+      "id": "808783645458695",
+      "changes": [
+        {
+          "value": {
+            "messaging_product": "whatsapp",
+            "metadata": {
+              "display_phone_number": "15556657611",
+              "phone_number_id": "775904258949205"
+            },
+            "statuses": [
+              {
+                "id": "wamid.HBgNNTUxMTk1ODcxMTc3MBUCABEYEjUzRDAzQzQyNDA2NDBFNTI0QgA=",
+                "status": "sent",
+                "timestamp": "1763807857",
+                "recipient_id": "5511958711770",
+                "pricing": {
+                  "billable": false,
+                  "pricing_model": "PMP",
+                  "category": "service",
+                  "type": "free_customer_service"
+                }
+              }
+            ]
+          },
+          "field": "messages"
+        }
+      ]
+    }
+  ]
+}
+[Debug] Mensagens extraídas: undefined
+[Debug] Contatos extraídos: undefined
+[Webhook] 🔔 Evento recebido: {
+  "object": "whatsapp_business_account",
+  "entry": [
+    {
+      "id": "808783645458695",
+      "changes": [
+        {
+          "value": {
+            "messaging_product": "whatsapp",
+            "metadata": {
+              "display_phone_number": "15556657611",
+              "phone_number_id": "775904258949205"
+            },
+            "statuses": [
+              {
+                "id": "wamid.HBgNNTUxMTk1ODcxMTc3MBUCABEYEjUzRDAzQzQyNDA2NDBFNTI0QgA=",
+                "status": "delivered",
+                "timestamp": "1763807857",
+                "recipient_id": "5511958711770",
+                "pricing": {
+                  "billable": false,
+                  "pricing_model": "PMP",
+                  "category": "service",
+                  "type": "free_customer_service"
+                }
+              }
+            ]
+          },
+          "field": "messages"
+        }
+      ]
+    }
+  ]
+}
+[Debug] Mensagens extraídas: undefined
+[Debug] Contatos extraídos: undefined
+[Webhook] 🔔 Evento recebido: {
+  "object": "whatsapp_business_account",
+  "entry": [
+    {
+      "id": "808783645458695",
+      "changes": [
+        {
+          "value": {
+            "messaging_product": "whatsapp",
+            "metadata": {
+              "display_phone_number": "15556657611",
+              "phone_number_id": "775904258949205"
+            },
+            "statuses": [
+              {
+                "id": "wamid.HBgNNTUxMTk1ODcxMTc3MBUCABEYEjUzRDAzQzQyNDA2NDBFNTI0QgA=",
+                "status": "delivered",
+                "timestamp": "1763807857",
+                "recipient_id": "5511958711770",
+                "pricing": {
+                  "billable": false,
+                  "pricing_model": "PMP",
+                  "category": "service",
+                  "type": "free_customer_service"
+                }
+              }
+            ]
+          },
+          "field": "messages"
+        }
+      ]
+    }
+  ]
+}
+[Debug] Mensagens extraídas: undefined
+[Debug] Contatos extraídos: undefined
