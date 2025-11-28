@@ -99,7 +99,7 @@ nano .env  # ou use vi, vim, etc.
 WHATSAPP_TOKEN=seu_token_aqui
 PHONE_NUMBER_ID=seu_phone_number_id
 VERIFY_TOKEN=seu_verify_token_personalizado
-PORT=3000
+PORT=8000
 OPENAI_API_KEY=sua_chave_openai_opcional
 ```
 
@@ -147,7 +147,7 @@ module.exports = {
     exec_mode: 'fork',
     env: {
       NODE_ENV: 'production',
-      PORT: 3000
+      PORT: 8000
     },
     error_file: './logs/pm2-error.log',
     out_file: './logs/pm2-out.log',
@@ -191,11 +191,11 @@ pm2 info wapp-webhook  # Informações detalhadas
 ### 6.1 Abrir porta da aplicação
 ```bash
 # Ubuntu/Debian (ufw)
-sudo ufw allow 3000/tcp
+sudo ufw allow 8000/tcp
 sudo ufw status
 
 # CentOS/RHEL (firewalld)
-sudo firewall-cmd --permanent --add-port=3000/tcp
+sudo firewall-cmd --permanent --add-port=8000/tcp
 sudo firewall-cmd --reload
 ```
 
@@ -215,7 +215,7 @@ server {
     server_name seu-dominio.com;  # ou IP do servidor
 
     location / {
-        proxy_pass http://localhost:3000;
+        proxy_pass http://localhost:8000;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
@@ -248,13 +248,13 @@ pm2 status
 pm2 logs wapp-webhook --lines 50
 
 # Testar endpoint localmente
-curl http://localhost:3000/webhook?hub.mode=subscribe&hub.verify_token=SEU_VERIFY_TOKEN&hub.challenge=test123
+curl http://localhost:8000/webhook?hub.mode=subscribe&hub.verify_token=SEU_VERIFY_TOKEN&hub.challenge=test123
 ```
 
 ### 7.2 Verificar conectividade externa
 ```bash
 # Do seu computador local, teste:
-curl http://SEU_IP_OU_DOMINIO:3000/webhook?hub.mode=subscribe&hub.verify_token=SEU_VERIFY_TOKEN&hub.challenge=test123
+curl http://SEU_IP_OU_DOMINIO:8000/webhook?hub.mode=subscribe&hub.verify_token=SEU_VERIFY_TOKEN&hub.challenge=test123
 ```
 
 ---
@@ -276,7 +276,7 @@ Você precisa de uma URL pública acessível pela Meta. Opções:
 sudo snap install ngrok
 
 # Iniciar túnel
-ngrok http 3000
+ngrok http 8000
 
 # Copie a URL HTTPS gerada (ex: https://abc123.ngrok.io)
 ```
@@ -342,9 +342,9 @@ npm ci --production
 pm2 restart wapp-webhook
 
 # Verificar porta em uso
-sudo netstat -tlnp | grep 3000
+sudo netstat -tlnp | grep 8000
 # ou
-sudo ss -tlnp | grep 3000
+sudo ss -tlnp | grep 8000
 ```
 
 ---
@@ -376,9 +376,9 @@ echo $PATH
 ### Porta já em uso
 ```bash
 # Ver o que está usando a porta
-sudo lsof -i :3000
+sudo lsof -i :8000
 # ou
-sudo netstat -tlnp | grep 3000
+sudo netstat -tlnp | grep 8000
 
 # Matar processo (substitua PID pelo número encontrado)
 kill -9 PID
@@ -401,7 +401,7 @@ kill -9 PID
 - [ ] Arquivo `.env` configurado com todas as variáveis
 - [ ] Dependências instaladas (`npm ci --production`)
 - [ ] Aplicação rodando no PM2
-- [ ] Porta 3000 aberta no firewall
+- [ ] Porta 8000 aberta no firewall
 - [ ] URL pública configurada (domínio ou ngrok)
 - [ ] Webhook configurado na Meta Developer Console
 - [ ] Teste de envio de mensagem funcionando

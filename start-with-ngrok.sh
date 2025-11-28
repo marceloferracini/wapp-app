@@ -15,7 +15,7 @@ if [ -f .env ]; then
   export $(cat .env | grep -v '^#' | xargs)
 fi
 
-PORT=${PORT:-3000}
+PORT=${PORT:-8000}
 
 LOG_FILE="app.log"
 echo "" > "$LOG_FILE"  # Limpa log anterior
