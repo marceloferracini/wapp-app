@@ -44,9 +44,21 @@ app.get('/webhook', (req, res) => {
 app.post('/webhook', async (req, res) => {
   console.log('[Webhook] 🔔 Evento recebido:', JSON.stringify(req.body, null, 2));
 
-  // Tenta extrair mensagens de diferentes estruturas possíveis
-  let messages = req.body.entry?.[0]?.changes?.[0]?.value?.messages;
-  let contacts = req.body.entry?.[0]?.changes?.[0]?.value?.contacts;
+  // Extrai dados do webhook
+  const change = req.body.entry?.[0]?.changes?.[0];
+  const value = change?.value || {};
+  
+  // Verifica se é evento de status (sent, delivered, read, etc.)
+  if (value.statuses && value.statuses.length > 0) {
+    const status = value.statuses[0];
+    console.log(`[Webhook] 📊 Status de mensagem: ${status.status} para ${status.recipient_id} (ID: ${status.id})`);
+    res.sendStatus(200);
+    return;
+  }
+
+  // Tenta extrair mensagens
+  let messages = value.messages;
+  let contacts = value.contacts;
   
   // Se não encontrou na estrutura padrão, tenta estrutura alternativa
   if (!messages) {
@@ -66,22 +78,61 @@ app.post('/webhook', async (req, res) => {
   console.log('[Debug] Contatos extraídos:', JSON.stringify(contacts, null, 2));
   
   if (messages && messages[0]) {
-    // Pega o número do remetente do contato, não do campo from da mensagem
-    const from = contacts?.[0]?.wa_id || messages[0].from; // número do cliente
-    const userText = messages[0].text?.body;
+    const message = messages[0];
+    const messageType = message.type;
+    
+    // Ignora eventos de permissão de chamada e outros tipos interativos
+    if (messageType === 'interactive' && message.interactive) {
+      const interactiveType = message.interactive.type;
+      
+      if (interactiveType === 'call_permission_reply') {
+        const from = contacts?.[0]?.wa_id || message.from;
+        const fullName = contacts?.[0]?.profile?.name || '';
+        const firstName = fullName.split(' ')[0] || '';
+        const response = message.interactive.call_permission_reply?.response;
+        
+        console.log(`[Webhook] 📞 Permissão de chamada ${response} por ${firstName} (${from})`);
+        console.log(`[Webhook] ⏰ Expira em: ${new Date(message.interactive.call_permission_reply.expiration_timestamp * 1000).toISOString()}`);
+        res.sendStatus(200);
+        return;
+      }
+      
+      // Outros tipos interativos (botões, listas, etc.)
+      console.log(`[Webhook] 🎛️ Evento interativo ignorado: ${interactiveType}`);
+      res.sendStatus(200);
+      return;
+    }
+    
+    // Ignora outros tipos de mensagem que não sejam texto
+    if (messageType !== 'text') {
+      console.log(`[Webhook] 📎 Mensagem do tipo '${messageType}' ignorada (não é texto)`);
+      res.sendStatus(200);
+      return;
+    }
+    
+    // Processa apenas mensagens de texto
+    const from = contacts?.[0]?.wa_id || message.from;
+    const userText = message.text?.body;
+    
+    // Valida se tem texto válido
+    if (!userText || userText.trim().length === 0) {
+      console.log(`[Webhook] ⚠️ Mensagem de texto vazia recebida de ${from}`);
+      res.sendStatus(200);
+      return;
+    }
     
     // Extrai o primeiro nome do contato
     const fullName = contacts?.[0]?.profile?.name || '';
     const firstName = fullName.split(' ')[0] || '';
 
-    console.log(`Mensagem recebida de ${from}: ${userText}`);
+    console.log(`[Webhook] 💬 Mensagem de texto recebida de ${firstName} (${from}): ${userText}`);
 
     // Gera resposta com OpenAI
     let reply = `Olá ${firstName}. Tudo bem ?\nAqui é da Humanizi AI, no que posso te ajudar ?`;
     
     if (OPENAI_API_KEY) {
       try {
-        console.log('[OpenAI] Gerando resposta...');
+        console.log('[OpenAI] 🤖 Gerando resposta...');
         const completion = await openai.chat.completions.create({
           model: "gpt-4o-mini",
           messages: [
@@ -99,9 +150,9 @@ app.post('/webhook', async (req, res) => {
         });
         
         reply = completion.choices[0].message.content;
-        console.log('[OpenAI] Resposta gerada:', reply);
+        console.log('[OpenAI] ✅ Resposta gerada:', reply);
       } catch (error) {
-        console.error('[OpenAI] Erro ao gerar resposta:', error.message);
+        console.error('[OpenAI] ❌ Erro ao gerar resposta:', error.message);
         reply = `Desculpe ${firstName}, estou com dificuldades técnicas no momento. Pode repetir?`;
       }
     }
@@ -138,6 +189,9 @@ app.post('/webhook', async (req, res) => {
         message: error.message
       });
     }
+  } else {
+    // Nenhuma mensagem encontrada no evento
+    console.log('[Webhook] ℹ️ Evento recebido sem mensagens processáveis');
   }
 
   res.sendStatus(200);
