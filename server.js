@@ -89,10 +89,20 @@ app.post('/webhook', async (req, res) => {
         const from = contacts?.[0]?.wa_id || message.from;
         const fullName = contacts?.[0]?.profile?.name || '';
         const firstName = fullName.split(' ')[0] || '';
-        const response = message.interactive.call_permission_reply?.response;
+        const callPermission = message.interactive.call_permission_reply;
+        const response = callPermission?.response;
+        const isPermanent = callPermission?.is_permanent;
+        const expirationTimestamp = callPermission?.expiration_timestamp;
         
         console.log(`[Webhook] 📞 Permissão de chamada ${response} por ${firstName} (${from})`);
-        console.log(`[Webhook] ⏰ Expira em: ${new Date(message.interactive.call_permission_reply.expiration_timestamp * 1000).toISOString()}`);
+        
+        if (isPermanent) {
+          console.log(`[Webhook] ✅ Permissão permanente`);
+        } else if (expirationTimestamp) {
+          const expirationDate = new Date(expirationTimestamp * 1000);
+          console.log(`[Webhook] ⏰ Expira em: ${expirationDate.toISOString()}`);
+        }
+        
         res.sendStatus(200);
         return;
       }
