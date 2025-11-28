@@ -25,6 +25,15 @@ const openai = new OpenAI({
   apiKey: OPENAI_API_KEY,
 });
 
+// Armazena histórico de conversas por usuário (número de telefone como chave)
+// Estrutura: Map<telefone, Array<{role: 'user'|'assistant', content: string}>>
+const conversationHistory = new Map();
+
+// Configuração do histórico: mantém últimos 3 pares de conversa
+// Cada par = 1 mensagem do usuário + 1 resposta do assistant = 2 mensagens
+// Total: 3 pares = 6 mensagens no histórico
+const MAX_HISTORY_PAIRS = 3;
+
 // 1️⃣ Validação do Webhook (GET)
 app.get('/webhook', (req, res) => {
   const mode = req.query['hub.mode'];
@@ -137,6 +146,26 @@ app.post('/webhook', async (req, res) => {
 
     console.log(`[Webhook] 💬 Mensagem de texto recebida de ${firstName} (${from}): ${userText}`);
 
+    // Obtém ou cria histórico de conversa para este usuário
+    let history = conversationHistory.get(from) || [];
+    
+    // Prepara mensagens para enviar à OpenAI (system + histórico + mensagem atual)
+    const messagesForOpenAI = [
+      {
+        role: "system",
+        content: `Você é um assistente virtual da Humanizi AI. Seja simpático, casual e conversacional. 
+Responda de forma MUITO CONCISA: máximo 1-2 frases curtas, no máximo 50 palavras ou 200 caracteres. 
+WhatsApp é para mensagens rápidas e objetivas. Seja natural e amigável, como se estivesse conversando com um amigo.`
+      },
+      ...history, // Histórico de conversas anteriores
+      {
+        role: "user",
+        content: userText
+      }
+    ];
+
+    console.log(`[Contexto] 📚 Enviando ${history.length} mensagens anteriores + mensagem atual para OpenAI`);
+
     // Gera resposta com OpenAI
     let reply = `Olá ${firstName}. Tudo bem ?\nAqui é da Humanizi AI, no que posso te ajudar ?`;
     
@@ -145,22 +174,41 @@ app.post('/webhook', async (req, res) => {
         console.log('[OpenAI] 🤖 Gerando resposta...');
         const completion = await openai.chat.completions.create({
           model: "gpt-4o-mini",
-          messages: [
-            {
-              role: "system",
-              content: `Você é um assistente virtual da Humanizi AI. Seja simpático, profissional e direto. Use no máximo 2 parágrafos.`
-            },
-            {
-              role: "user",
-              content: userText
-            }
-          ],
-          max_tokens: 200,
+          messages: messagesForOpenAI,
+          max_tokens: 120,
           temperature: 0.7
         });
         
         reply = completion.choices[0].message.content;
+        
+        // Trunca resposta se passar de 200 caracteres (segurança extra)
+        if (reply.length > 200) {
+          reply = reply.substring(0, 197) + '...';
+          console.log('[OpenAI] ⚠️ Resposta truncada para 200 caracteres');
+        }
+        
         console.log('[OpenAI] ✅ Resposta gerada:', reply);
+        console.log(`[OpenAI] 📊 Tamanho: ${reply.length} caracteres, ${reply.split(' ').length} palavras`);
+        
+        // Adiciona mensagem do usuário e resposta ao histórico
+        history.push(
+          { role: "user", content: userText },
+          { role: "assistant", content: reply }
+        );
+        
+        // Limita histórico aos últimos MAX_HISTORY_PAIRS pares (user + assistant)
+        // Cada par = 2 mensagens, então MAX_HISTORY_PAIRS * 2 = total de mensagens
+        const maxMessages = MAX_HISTORY_PAIRS * 2;
+        if (history.length > maxMessages) {
+          // Remove as mensagens mais antigas, mantendo apenas as últimas
+          history = history.slice(-maxMessages);
+          console.log(`[Contexto] 🧹 Histórico limitado a ${MAX_HISTORY_PAIRS} pares de conversa (${maxMessages} mensagens)`);
+        }
+        
+        // Atualiza histórico no Map
+        conversationHistory.set(from, history);
+        console.log(`[Contexto] 💾 Histórico atualizado para ${from}: ${history.length} mensagens`);
+        
       } catch (error) {
         console.error('[OpenAI] ❌ Erro ao gerar resposta:', error.message);
         reply = `Desculpe ${firstName}, estou com dificuldades técnicas no momento. Pode repetir?`;
