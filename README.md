@@ -66,9 +66,30 @@ Para atualizações futuras:
 ./deploy-auto.sh
 ```
 
+### Configurar Nginx + SSL (HTTPS)
+
+Para expor a aplicação via HTTPS sem especificar porta:
+
+📖 **Guia Completo:** Consulte [CONFIGURAR-NGINX-SSL.md](./CONFIGURAR-NGINX-SSL.md)
+
+**Setup Automatizado:**
+```bash
+sudo ./setup-nginx-ssl.sh
+```
+
+O script vai:
+- Configurar Nginx como proxy reverso
+- Instalar e configurar Certbot (Let's Encrypt)
+- Obter certificado SSL automaticamente
+- Configurar redirect HTTP → HTTPS
+
+**URL final:** `https://webhook.humanizi.ai/webhook`
+
 ### Arquivos de Configuração
 
 - `ecosystem.config.js`: configuração do PM2
 - `setup-inicial.sh`: script de setup inicial
 - `deploy-auto.sh`: script de deploy automático
+- `setup-nginx-ssl.sh`: script de configuração Nginx + SSL
+- `nginx-webhook.humanizi.ai.conf`: template de configuração Nginx
 
