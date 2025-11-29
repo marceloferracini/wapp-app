@@ -29,10 +29,10 @@ const openai = new OpenAI({
 // Estrutura: Map<telefone, Array<{role: 'user'|'assistant', content: string}>>
 const conversationHistory = new Map();
 
-// Configuração do histórico: mantém últimos 3 pares de conversa
+// Configuração do histórico: mantém últimos 10 pares de conversa
 // Cada par = 1 mensagem do usuário + 1 resposta do assistant = 2 mensagens
-// Total: 3 pares = 6 mensagens no histórico
-const MAX_HISTORY_PAIRS = 3;
+// Total: 10 pares = 20 mensagens no histórico
+const MAX_HISTORY_PAIRS = 10;
 
 // 1️⃣ Validação do Webhook (GET)
 app.get('/webhook', (req, res) => {
@@ -153,9 +153,69 @@ app.post('/webhook', async (req, res) => {
     const messagesForOpenAI = [
       {
         role: "system",
-        content: `Você é um assistente virtual da Humanizi AI. Seja simpático, casual e conversacional. 
-Responda de forma MUITO CONCISA: máximo 1-2 frases curtas, no máximo 50 palavras ou 200 caracteres. 
-WhatsApp é para mensagens rápidas e objetivas. Seja natural e amigável, como se estivesse conversando com um amigo.`
+        content: `# PAPEL
+
+Você é um assistente virtual da Unopar. Sua função é ajudar pessoas interessadas em começar uma graduação, apresentando cursos disponíveis, modalidades e valores aproximados de mensalidade, e guiando o usuário até o início da inscrição.
+
+# TOM E ESTILO
+
+- Fale de forma clara, amigável e objetiva.
+- Use frases curtas.
+- Não dê informações complexas, apenas o essencial.
+- Seja prestativo e ajude o usuário a encontrar o curso ideal.
+
+# OBJETIVOS PRINCIPAIS
+
+1. Perguntar qual curso ou área de interesse o usuário deseja.
+2. Mostrar cursos de graduação oferecidos pela Unopar.
+3. Informar modalidades disponíveis (EAD, semipresencial e presencial).
+4. Apresentar valores aproximados de mensalidade, quando disponíveis.
+5. Guiar o usuário para verificar disponibilidade no polo, enviar link de inscrição ou coletar dados básicos.
+
+# CURSOS DISPONÍVEIS (LISTA REAL DE EXEMPLOS)
+
+A Unopar oferece diversos cursos de graduação. Alguns cursos populares:
+
+- Administração — EAD ou presencial — mensalidades a partir de **R$ 159,00**. 
+- Gestão de Recursos Humanos — EAD ou presencial — a partir de **R$ 159,00**. 
+- Educação Física — Licenciatura / Bacharelado — valores a partir de **R$ 173,99**. 
+- Biomedicina — Semipresencial / Presencial — valores a partir de **R$ 197,99**. 
+- Direito — presencial (valor depende do campus). 
+- Enfermagem — presencial/semipresencial (valores variam por polo). 
+- Psicologia — presencial/semipresencial. 
+- Nutrição — presencial/semipresencial. 
+- Engenharia Civil — presencial. 
+- Análise e Desenvolvimento de Sistemas — EAD ou semipresencial — faixa histórica entre **R$ 474 e R$ 492**. 
+- Ciências Contábeis — EAD — valores médios próximos de **R$ 309,00**. 
+
+# IMPORTANTE SOBRE VALORES
+
+- Os valores podem variar conforme modalidade (EAD / presencial / semipresencial), cidade, polo, promoções e época da matrícula.  
+- Sempre ofereça verificar preço atualizado ou enviar o link oficial de matrícula.
+
+# FLUXO SUGERIDO DE ATENDIMENTO
+
+1. Cumprimente o usuário:  
+   "Olá! Bem-vindo à Unopar. Qual curso de graduação você tem interesse em fazer?"
+
+2. Se o usuário disser um curso:  
+   - Informe se está disponível (EAD, semipresencial ou presencial).  
+   - Informe o valor inicial aproximado, se existir.  
+   - Pergunte se deseja verificar a disponibilidade no polo da cidade.
+
+3. Se o usuário não souber qual curso fazer:  
+   - Pergunte a área de interesse (ex.: saúde, exatas, gestão, educação).  
+   - Sugira alguns cursos populares.
+
+4. Convide a avançar para a inscrição:  
+   "Quer que eu veja a disponibilidade para sua cidade ou prefere receber o link para iniciar sua inscrição agora?"
+
+# REGRAS FINAIS
+
+- Nunca invente valores exatos; sempre apresente como "a partir de" quando existir essa informação.  
+- Para cursos sem valor visível, informe que "o valor depende do polo e da modalidade".  
+- Se o usuário pedir algo que só humanos podem resolver (problemas de matrícula, histórico, documentos), diga que precisa encaminhar e solicite nome, telefone e e-mail.
+- Seja objetivo mas prestativo. Adapte-se ao contexto da conversa mantendo o tom profissional e amigável.`
       },
       ...history, // Histórico de conversas anteriores
       {
@@ -167,7 +227,7 @@ WhatsApp é para mensagens rápidas e objetivas. Seja natural e amigável, como 
     console.log(`[Contexto] 📚 Enviando ${history.length} mensagens anteriores + mensagem atual para OpenAI`);
 
     // Gera resposta com OpenAI
-    let reply = `Olá ${firstName}. Tudo bem ?\nAqui é da Humanizi AI, no que posso te ajudar ?`;
+    let reply = `Olá ${firstName}! Bem-vindo à Unopar. Qual curso de graduação você tem interesse em fazer?`;
     
     if (OPENAI_API_KEY) {
       try {
@@ -175,17 +235,11 @@ WhatsApp é para mensagens rápidas e objetivas. Seja natural e amigável, como 
         const completion = await openai.chat.completions.create({
           model: "gpt-4o-mini",
           messages: messagesForOpenAI,
-          max_tokens: 120,
+          max_tokens: 500,
           temperature: 0.7
         });
         
         reply = completion.choices[0].message.content;
-        
-        // Trunca resposta se passar de 200 caracteres (segurança extra)
-        if (reply.length > 200) {
-          reply = reply.substring(0, 197) + '...';
-          console.log('[OpenAI] ⚠️ Resposta truncada para 200 caracteres');
-        }
         
         console.log('[OpenAI] ✅ Resposta gerada:', reply);
         console.log(`[OpenAI] 📊 Tamanho: ${reply.length} caracteres, ${reply.split(' ').length} palavras`);
@@ -211,7 +265,7 @@ WhatsApp é para mensagens rápidas e objetivas. Seja natural e amigável, como 
         
       } catch (error) {
         console.error('[OpenAI] ❌ Erro ao gerar resposta:', error.message);
-        reply = `Desculpe ${firstName}, estou com dificuldades técnicas no momento. Pode repetir?`;
+        reply = `Olá ${firstName}! Desculpe, estou com dificuldades técnicas no momento. Pode repetir sua mensagem?`;
       }
     }
 
