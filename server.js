@@ -149,11 +149,11 @@ app.post('/webhook', async (req, res) => {
     // Obtém ou cria histórico de conversa para este usuário
     let history = conversationHistory.get(from) || [];
     
-    // Prepara mensagens para enviar à OpenAI (system + histórico + mensagem atual)
-    const messagesForOpenAI = [
-      {
-        role: "system",
-        content: `# PAPEL
+    // Verifica se é a primeira mensagem (histórico vazio)
+    const isFirstMessage = history.length === 0;
+    
+    // Prepara o prompt do sistema com informações do usuário se disponível
+    let systemPrompt = `# PAPEL
 
 Você é um assistente virtual da Unopar. Sua função é ajudar pessoas interessadas em começar uma graduação, apresentando cursos disponíveis, modalidades e valores aproximados de mensalidade, e guiando o usuário até o início da inscrição.
 
@@ -195,8 +195,8 @@ A Unopar oferece diversos cursos de graduação. Alguns cursos populares:
 
 # FLUXO SUGERIDO DE ATENDIMENTO
 
-1. Cumprimente o usuário:  
-   "Olá! Bem-vindo à Unopar. Qual curso de graduação você tem interesse em fazer?"
+1. Cumprimente o usuário:${firstName ? ` Use o nome do usuário: "${firstName}"` : ''}  
+   ${firstName ? `"Olá ${firstName}! Bem-vindo à Unopar. Qual curso de graduação você tem interesse em fazer?"` : '"Olá! Bem-vindo à Unopar. Qual curso de graduação você tem interesse em fazer?"'}
 
 2. Se o usuário disser um curso:  
    - Informe se está disponível (EAD, semipresencial ou presencial).  
@@ -215,7 +215,13 @@ A Unopar oferece diversos cursos de graduação. Alguns cursos populares:
 - Nunca invente valores exatos; sempre apresente como "a partir de" quando existir essa informação.  
 - Para cursos sem valor visível, informe que "o valor depende do polo e da modalidade".  
 - Se o usuário pedir algo que só humanos podem resolver (problemas de matrícula, histórico, documentos), diga que precisa encaminhar e solicite nome, telefone e e-mail.
-- Seja objetivo mas prestativo. Adapte-se ao contexto da conversa mantendo o tom profissional e amigável.`
+- Seja objetivo mas prestativo. Adapte-se ao contexto da conversa mantendo o tom profissional e amigável.${firstName ? `\n- IMPORTANTE: O nome do usuário é "${firstName}". Use este nome quando apropriado, especialmente ao cumprimentar pela primeira vez.` : ''}`;
+    
+    // Prepara mensagens para enviar à OpenAI (system + histórico + mensagem atual)
+    const messagesForOpenAI = [
+      {
+        role: "system",
+        content: systemPrompt
       },
       ...history, // Histórico de conversas anteriores
       {
